@@ -194,8 +194,15 @@ class OpenAI(LLM):
             stream=False,
             **self._get_all_kwargs(**kwargs),
         )
-        message_dict = response["choices"][0]["message"]
-        message = from_openai_message_dict(message_dict)
+        try:
+            message_dict = response["choices"][0]["message"]
+            message = from_openai_message_dict(message_dict)
+        except:
+            message = ChatMessage(
+                role="assistant",
+                content="",
+                additional_kwargs={},
+            )
 
         return ChatResponse(
             message=message,
